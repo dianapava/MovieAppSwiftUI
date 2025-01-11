@@ -7,36 +7,53 @@
 
 import Foundation
 import SDWebImageSwiftUI
+import Combine
 
 class MovieViewModel: ObservableObject {
-    //MARK: public properties
-    @Published var movieList: [MovieModel] = []
 
-    
-    //MARK: private properties
+    @Published var movieList: [Movie] = []
+    @Published var genreList: [GenreId] = []
+    @Published var genreMap: [Int: String] = [:]
+    @Published var errorMessage: String?
+
     private lazy var respository : MovieRepository = {
         let apiClient = ApiClient()
         return MovieRepository(apiClient: apiClient)
     }()
-     
-    func viewDidload() {
-        getMovieList()
-    }
     
-    private func getMovieList() {
-        respository.getMovie(onSuccess: { [weak self] movies in
-            DispatchQueue.main.async {
-                self?.movieList = movies
-            }
+    func fetchData() {
+        let group = DispatchGroup()
+        var fetchError: Error?
+        var fetchedMovies: [Movie] = []
+        var fetchedGenres: [GenreId] = []
+        
+        group.enter()
+        respository.getGenreMovie { genres in
+            fetchedGenres = genres
+            group.leave()
+        } onFailure: { error in
+            fetchError = error
+            group.leave()
+        }
+        
+        group.enter()
+        respository.getMovie(onSuccess: { movies in
+        fetchedMovies = movies
+                group.leave()
         }, onFailure: { error in
-            
+            fetchError = error
+            group.leave()
         })
+        
+        group.notify(queue: .main) {
+            if let error = fetchError {
+                self.errorMessage = error.localizedDescription
+            } else {
+                self.genreMap = Dictionary(uniqueKeysWithValues: fetchedGenres.map { ($0.id, $0.name) })
+                self.movieList = fetchedMovies
+            }
+        }
     }
-    
-    func set(urlImage: String) {
-           let url = "https://image.tmdb.org/t/p/w400" + urlImage
-           //imageMovie.sd_setImage(with: URL(string: url))
-       }
 }
 
 

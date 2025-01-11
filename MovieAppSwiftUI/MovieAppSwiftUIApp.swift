@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct MovieAppSwiftUIApp: App {
 
+    @ObservedObject var viewModel = MovieViewModel()
 
     var body: some Scene {
         WindowGroup {

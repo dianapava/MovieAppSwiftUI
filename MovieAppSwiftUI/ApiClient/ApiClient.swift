@@ -23,7 +23,11 @@ class ApiClient: ApiClientProtocol {
             onFailure(ClientError.urlInvalid)
             return
         }
-        let request = URLRequest(url: url)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = endpoint.httpMethod.rawValue
+        request.timeoutInterval = 10
+        request.allHTTPHeaderFields = endpoint.headers
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {

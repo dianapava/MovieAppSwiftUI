@@ -9,24 +9,28 @@
 import SwiftUI
 
 struct MovieGenre: View {
+    @StateObject var viewModel = MovieViewModel()
+    let movie: Movie
     
     var body: some View {
-        ZStack {
+        HStack {
             VStack {
-                Text("1")
+                Text(movie.genre_ids.compactMap{viewModel.genreMap[$0] }.joined(separator: ", "))
                     .font(.headline)
                     .bold()
+                    .foregroundColor(.white)
             }
-            .frame(width: 80, height: 20)
+            .padding(.all, 8)
             .overlay(
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: 16)
                     .stroke(Color.gray, lineWidth: 2)
             )
-            .shadow(radius: 10)
-        }.padding(5)
+            .shadow(radius: 16)
+        } .frame(maxWidth: .infinity, alignment: .center)
+            .onAppear {
+                viewModel.fetchData()
+            }
     }
 }
 
-#Preview {
-    MovieGenre()
-}
+

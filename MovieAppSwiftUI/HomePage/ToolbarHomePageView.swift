@@ -1,42 +1,27 @@
 //
-//  ToolBarHomePage.swift
+//  ToolbarHomePageView.swift
 //  MovieAppSwiftUI
 //
-//  Created by Diana Pava Avila on 4/12/24.
+//  Created by Diana Pava Avila on 10/01/25.
 //
 import SwiftUI
 
-struct ToolBarHomePage: View {
-    
+struct ToolbarHomePageView: View {
     var body: some View {
         HStack{
-            Text("Movies")
-                .font(.system(size: 25))
-                .bold()
-                .shadow(radius: 10)
-                //.safeAreaPadding()
-                .padding()
             Spacer()
             Button("", systemImage: "magnifyingglass", action: {
                 
-            }).foregroundColor(.black)
+            }).foregroundColor(.white)
                 .font(.system(size: 20))
                 .bold()
                 .shadow(radius: 10)
             Button("", systemImage: "bell.and.waves.left.and.right", action: {
                 
-            }).foregroundColor(.black)
+            }).foregroundColor(.white)
                 .font(.system(size: 20))
                 .bold()
                 .shadow(radius: 10)
-                .padding()
-        }
+        }.safeAreaPadding(.horizontal, 60)
     }
 }
-
-
-
-#Preview {
-    ToolBarHomePage()
-}
-//star.fill

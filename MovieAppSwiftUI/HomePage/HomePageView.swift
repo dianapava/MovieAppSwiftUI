@@ -9,28 +9,28 @@ import SwiftUI
 
 struct HomePageView: View {
     
-    @ObservedObject var viewModel = MovieViewModel()
+    @StateObject var viewModel = MovieViewModel()
+    @State private var index: Int = 0
     
     var body: some View {
-        NavigationView {
-            ZStack{
-                VStack{
-                    ToolBarHomePage()
-                    HStack{
-                        ForEach(0...2, id: \.self) { value in
-                            MovieGenre()
-                            
-                        }
-                    }.padding(.trailing, 80)
-                    BackgroundMovie()
-                    Spacer()
-                }
+        ZStack{
+            Color.black
+                .ignoresSafeArea()
+            BackgroundMovie(movieList: viewModel.movieList, index: $index)
+                .ignoresSafeArea()
+            VStack{
+                ToolbarHomePageView()
+                MovieListView(movieList: viewModel.movieList, index: { index in
+                    self.index = index
+                }, currentIndex: $index)
             }
         }
+        .onAppear {
+            viewModel.fetchData()
+        }
+        
     }
 }
-
-
 
 #Preview {
     HomePageView()
