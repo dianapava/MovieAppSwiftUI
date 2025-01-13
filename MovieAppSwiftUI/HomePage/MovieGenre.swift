@@ -15,7 +15,7 @@ struct MovieGenre: View {
     var body: some View {
         HStack {
             VStack {
-                Text(movie.genre_ids.compactMap{viewModel.genreMap[$0] }.joined(separator: ", "))
+                Text(movie.genre_ids.compactMap{viewModel.genreMap[$0] }.joined(separator: " | "))
                     .font(.headline)
                     .bold()
                     .foregroundColor(.white)
